@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceDesk — AI Receptionist</title>
+<style>
+:root{--bg:#f7f8fc;--card:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--primary:#5b4cf6;--primary2:#7c3aed;--dark:#17172a;--green:#16a34a;--red:#dc2626;--shadow:0 12px 35px rgba(20,20,50,.08)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}button,input,textarea,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}
+a{text-decoration:none;color:inherit}.container{max-width:1150px;margin:auto;padding:0 20px}
+.nav{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}.logo{font-size:22px;font-weight:800}.logo span{color:var(--primary)}
+.navlinks{display:flex;gap:25px;color:#667085;font-size:14px}.navactions{display:flex;gap:9px;align-items:center}.btn{padding:11px 17px;border-radius:10px;font-weight:700;background:#fff;border:1px solid var(--line)}.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn.dark{background:var(--dark);color:#fff}.btn.small{padding:8px 12px;font-size:13px}
+.hero{padding:75px 0 55px;text-align:center;background:linear-gradient(180deg,#fff 0%,#f7f8fc 100%)}.badge{display:inline-block;background:#eeecff;color:#5145cd;border-radius:99px;padding:7px 12px;font-size:12px;font-weight:700;margin-bottom:18px}.hero h1{font-size:clamp(38px,7vw,68px);line-height:1.02;margin:0 auto 18px;max-width:850px;letter-spacing:-2px}.hero p{max-width:650px;margin:0 auto 25px;color:var(--muted);font-size:18px;line-height:1.6}.hero-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.section{padding:65px 0}.section h2{text-align:center;font-size:32px;margin:0 0 10px}.section>p{text-align:center;color:var(--muted);margin:0 auto 30px;max-width:650px}.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:stretch}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.card-pad{padding:22px}
+.chatbox{display:flex;flex-direction:column;height:500px;overflow:hidden}.chathead{padding:17px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px}.avatar{width:38px;height:38px;border-radius:12px;background:#e9e6ff;color:#5346d7;display:grid;place-items:center;font-weight:800}.status{font-size:12px;color:var(--green)}.messages{padding:18px;overflow:auto;flex:1;background:#fafafa}.msg{max-width:82%;padding:11px 13px;border-radius:14px;margin-bottom:10px;font-size:14px;line-height:1.45}.msg.ai{background:#fff;border:1px solid var(--line)}.msg.user{background:var(--primary);color:#fff;margin-left:auto}.chatinput{padding:12px;border-top:1px solid var(--line);display:flex;gap:8px}.chatinput input{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px;outline:none}.chatinput button{background:var(--primary);color:#fff;border-radius:10px;padding:0 16px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.feature{padding:22px}.feature b{display:block;margin-bottom:8px}.feature p{color:var(--muted);font-size:14px;line-height:1.5;margin:0}
+.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.price{padding:25px}.price h3{margin:0 0 10px}.amount{font-size:30px;font-weight:800}.price ul{padding-left:18px;color:var(--muted);line-height:2;font-size:14px}
+.faq{max-width:750px;margin:auto}.faq details{background:#fff;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;padding:16px}.faq summary{font-weight:700;cursor:pointer}.faq p{color:var(--muted);line-height:1.5}
+.footer{padding:35px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center}
+
+/* app */
+.app{display:none;min-height:100vh;background:#f6f7fb}.app.active{display:flex}.sidebar{width:235px;background:#fff;border-right:1px solid var(--line);padding:20px 14px;position:fixed;left:0;top:0;bottom:0}.side-logo{padding:10px 12px 25px}.side-btn{width:100%;padding:12px;text-align:left;background:transparent;border-radius:10px;color:#667085;margin-bottom:4px;font-weight:600}.side-btn:hover,.side-btn.active{background:#eeecff;color:#5145cd}.side-bottom{position:absolute;bottom:20px;left:14px;right:14px}.main{margin-left:235px;width:calc(100% - 235px);padding:25px}.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.topbar h2{margin:0;font-size:25px}.business-pill{background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:10px;font-size:13px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{padding:19px}.stat .num{font-size:28px;font-weight:800;margin-top:5px}.stat small{color:var(--muted)}.dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-top:16px}.panel{padding:20px}.panel h3{margin:0 0 16px}.row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid #f0f0f0;gap:12px}.row:last-child{border-bottom:0}.row small{color:var(--muted);display:block;margin-top:3px}.tag{font-size:11px;padding:5px 8px;border-radius:99px;background:#eefcf2;color:#16803a;white-space:nowrap}.tag.orange{background:#fff6e8;color:#a15c00}.page{display:none}.page.active{display:block}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:14px}.table th,.table td{text-align:left;padding:13px;border-bottom:1px solid var(--line);white-space:nowrap}.table th{color:var(--muted);font-size:12px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{margin-bottom:13px}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}.field input,.field textarea,.field select{width:100%;padding:11px;border:1px solid var(--line);border-radius:9px;background:#fff;outline:none}.field textarea{min-height:90px;resize:vertical}.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:10px}.list-editor{border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:10px}.empty{text-align:center;padding:35px;color:var(--muted)}
+.mobile-nav{display:none}.toast{position:fixed;right:18px;bottom:18px;background:#17172a;color:#fff;padding:12px 16px;border-radius:10px;z-index:100;box-shadow:var(--shadow);font-size:14px}.modal{position:fixed;inset:0;background:rgba(10,10,25,.5);display:none;align-items:center;justify-content:center;z-index:80;padding:18px}.modal.show{display:flex}.modalbox{background:#fff;border-radius:18px;max-width:650px;width:100%;max-height:90vh;overflow:auto;padding:24px}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.x{background:#f2f2f5;border-radius:8px;padding:7px 10px}
+.onboarding{min-height:100vh;display:none;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f7f6ff,#fff)}.onboarding.active{display:flex}.onboard-card{max-width:720px;width:100%;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}.steps{display:flex;gap:7px;margin:18px 0 25px}.step-dot{height:5px;flex:1;background:#e5e7eb;border-radius:99px}.step-dot.active{background:var(--primary)}.onboard-step{display:none}.onboard-step.active{display:block}.onboard-card h1{margin:0 0 8px}.onboard-card .sub{color:var(--muted);margin:0 0 22px}.service-add{display:flex;gap:8px}.service-add input{flex:1}.service-list{margin-top:12px}.service-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;font-size:14px}.remove{color:var(--red);background:none;font-weight:700}
+
+@media(max-width:800px){
+.navlinks{display:none}.navactions .btn:first-child{display:none}.hero{padding:55px 0 45px}.demo-grid,.features,.pricing,.dashboard-grid{grid-template-columns:1fr}.features,.pricing{gap:12px}.stats{grid-template-columns:1fr 1fr}.sidebar{display:none}.main{margin-left:0;width:100%;padding:18px 14px 85px}.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:66px;background:#fff;border-top:1px solid var(--line);z-index:30;justify-content:space-around;padding:6px}.mobile-nav button{background:transparent;color:#667085;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 9px}.mobile-nav button.active{color:var(--primary);font-weight:700}.form-grid{grid-template-columns:1fr}.chatbox{height:460px}.topbar h2{font-size:21px}
+}
+</style>
+</head>
+<body>
+
+<div id="publicSite">
+<header class="nav">
+<div class="container" style="display:flex;align-items:center;justify-content:space-between;width:100%">
+<a class="logo" href="#" onclick="showPublic()">Voice<span>Desk</span></a>
+<nav class="navlinks"><a href="#how">How it works</a><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav>
+<div class="navactions"><button class="btn" onclick="openLogin()">Log in</button><button class="btn primary" onclick="startOnboarding()">Get started</button></div>
+</div>
+</header>
+
+<section class="hero">
+<div class="container">
+<span class="badge">AI receptionist for growing businesses</span>
+<h1>Let your business answer every customer.</h1>
+<p>VoiceDesk helps businesses respond to customers, answer common questions, capture leads and manage bookings — even when the owner is busy.</p>
+<div class="hero-actions"><button class="btn primary" onclick="scrollToDemo()">Try live demo</button><button class="btn" onclick="startOnboarding()">Set up my business</button></div>
+</div>
+</section>
+
+<section class="section" id="how">
+<div class="container">
+<h2>See how VoiceDesk works</h2><p>Test the receptionist before setting up your own business.</p>
+<div class="demo-grid">
+<div class="card chatbox">
+<div class="chathead"><div class="avatar">V</div><div><b>Glow Beauty Studio</b><div class="status">● AI receptionist online</div></div></div>
+<div class="messages" id="demoMessages">
+<div class="msg ai">Hi! Welcome to Glow Beauty Studio. How can I help you today?</div>
+</div>
+<div class="chatinput"><input id="demoInput" placeholder="Ask about price, hours, booking..." onkeydown="if(event.key==='Enter')sendDemo()"><button onclick="sendDemo()">Send</button></div>
+</div>
+<div class="card card-pad">
+<h3 style="margin-top:0">Try asking</h3>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<button class="btn small" onclick="quickDemo('How much is braiding?')">How much is braiding?</button>
+<button class="btn small" onclick="quickDemo('What time do you open?')">What time do you open?</button>
+<button class="btn small" onclick="quickDemo('I want to book an appointment')">Book an appointment</button>
+<button class="btn small" onclick="quickDemo('Where are you located?')">Where are you located?</button>
+</div>
+<hr style="border:0;border-top:1px solid var(--line);margin:25px 0">
+<h3>What happens next?</h3>
+<p style="color:var(--muted);line-height:1.6">The receptionist uses your business information to answer customers. When it cannot confidently answer something, it can flag the conversation for you.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="section" id="features">
+<div class="container"><h2>Everything you need to stop missing leads</h2><p>Start simple. Add advanced channels later.</p>
+<div class="features">
+<div class="card feature"><b>AI receptionist</b><p>Answers common customer questions using your business information.</p></div>
+<div class="card feature"><b>Lead capture</b><p>Collect customer names, contact details and what they need.</p></div>
+<div class="card feature"><b>Bookings</b><p>Turn conversations into appointments and keep them in one place.</p></div>
+<div class="card feature"><b>Business knowledge</b><p>Control your services, prices, hours and FAQs.</p></div>
+<div class="card feature"><b>Owner takeover</b><p>Step into a conversation whenever the AI needs you.</p></div>
+<div class="card feature"><b>More channels later</b><p>WhatsApp and phone calls can be connected after the core product is validated.</p></div>
+</div></div>
+</section>
+
+<section class="section" id="pricing">
+<div class="container"><h2>Simple pricing</h2><p>These are prototype prices for testing the idea, not final commercial pricing.</p>
+<div class="pricing">
+<div class="card price"><h3>Starter</h3><div class="amount">₦5k<small>/mo</small></div><ul><li>AI receptionist</li><li>Business FAQs</li><li>Lead capture</li><li>Basic dashboard</li></ul><button class="btn primary" onclick="startOnboarding()">Try it</button></div>
+<div class="card price" style="border:2px solid var(--primary)"><h3>Growth</h3><div class="amount">₦10k<small>/mo</small></div><ul><li>Everything in Starter</li><li>Bookings</li><li>Customer management</li><li>Owner takeover</li></ul><button class="btn primary" onclick="startOnboarding()">Try it</button></div>
+<div class="card price"><h3>Business</h3><div class="amount">Custom</div><ul><li>Multiple locations</li><li>Advanced integrations</li><li>Custom support</li><li>Future WhatsApp/voice channels</li></ul><button class="btn" onclick="toast('Business plans will be available later.')">Contact us</button></div>
+</div></div>
+</section>
+
+<section class="section" id="faq">
+<div class="container"><h2>FAQ</h2><div class="faq">
+<details><summary>Does VoiceDesk use my personal phone?</summary><p>No. This prototype works without phone access. Real business phone and WhatsApp connections can be added later.</p></details>
+<details><summary>Do I need an API key?</summary><p>Not for this prototype. The current receptionist uses a local response engine so you can test the product first.</p></details>
+<details><summary>Can I use it for any business?</summary><p>Yes, the setup is designed around your business information. The first target can be salons, barbershops and other appointment-based businesses.</p></details>
+<details><summary>Will customer data be saved?</summary><p>This prototype saves data in the browser on the device. A secure cloud database will be added before real customers use the service.</p></details>
+</div></div>
+</section>
+<footer class="footer">VoiceDesk © 2026 — AI receptionist prototype</footer>
+</div>
+
+<!-- ONBOARDING -->
+<div id="onboarding" class="onboarding">
+<div class="onboard-card">
+<div style="display:flex;justify-content:space-between;align-items:center"><div class="logo">Voice<span>Desk</span></div><button class="x" onclick="showPublic()">✕</button></div>
+<div class="steps"><span class="step-dot active"></span><span class="step-dot"></span><span class="step-dot"></span><span class="step-dot"></span></div>
+
+<div class="onboard-step active" id="step1">
+<h1>Tell us about your business</h1><p class="sub">This information helps VoiceDesk understand your business.</p>
+<div class="form-grid">
+<div class="field"><label>Business name</label><input id="bizName" placeholder="e.g. Glow Beauty Studio"></div>
+<div class="field"><label>Business type</label><select id="bizType"><option>Salon / Beauty</option><option>Barbershop</option><option>Restaurant</option><option>Retail</option><option>Professional service</option><option>Other</option></select></div>
+</div>
+<div class="field"><label>Location</label><input id="bizLocation" placeholder="e.g. Abak, Akwa Ibom"></div>
+<div class="field"><label>Business description</label><textarea id="bizDescription" placeholder="Tell customers what your business does..."></textarea></div>
+<div class="form-actions"><button class="btn primary" onclick="nextOnboard(2)">Continue</button></div>
+</div>
+
+<div class="onboard-step" id="step2">
+<h1>Opening hours</h1><p class="sub">Set the hours customers should see.</p>
+<div id="hoursFields"></div>
+<div class="form-actions"><button class="btn" onclick="nextOnboard(1)">Back</button><button class="btn primary" onclick="nextOnboard(3)">Continue</button></div>
+</div>
+
+<div class="onboard-step" id="step3">
+<h1>Services & prices</h1><p class="sub">Add the services customers usually ask about.</p>
+<div class="service-add"><input id="serviceName" placeholder="Service name"><input id="servicePrice" placeholder="Price" style="max-width:150px"><button class="btn primary" onclick="addService()">Add</button></div>
+<div class="service-list" id="serviceList"></div>
+<div class="form-actions"><button class="btn" onclick="nextOnboard(2)">Back</button><button class="btn primary" onclick="nextOnboard(4)">Continue</button></div>
+</div>
+
+<div class="onboard-step" id="step4">
+<h1>FAQs & receptionist style</h1><p class="sub">Give VoiceDesk a few answers it should know.</p>
+<div class="field"><label>Frequently asked question</label><input id="faqQ" placeholder="e.g. Do I need an appointment?"></div>
+<div class="field"><label>Answer</label><textarea id="faqA" placeholder="e.g. Appointments are recommended, but walk-ins are welcome when available."></textarea></div>
+<button class="btn small" onclick="addFaq()">Add FAQ</button>
+<div id="faqList" style="margin-top:12px"></div>
+<div class="field" style="margin-top:18px"><label>AI personality</label><select id="aiStyle"><option>Friendly and professional</option><option>Warm and casual</option><option>Short and direct</option></select></div>
+<div class="form-actions"><button class="btn" onclick="nextOnboard(3)">Back</button><button class="btn primary" onclick="activateBusiness()">Activate VoiceDesk</button></div>
+</div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app" class="app">
+<aside class="sidebar">
+<div class="side-logo"><div class="logo">Voice<span>Desk</span></div></div>
+<button class="side-btn active" data-page="overview" onclick="showPage('overview')">⌂ &nbsp; Overview</button>
+<button class="side-btn" data-page="chats" onclick="showPage('chats')">◉ &nbsp; Chats</button>
+<button class="side-btn" data-page="bookings" onclick="showPage('bookings')">▣ &nbsp; Bookings</button>
+<button class="side-btn" data-page="customers" onclick="showPage('customers')">♙ &nbsp; Customers</button>
+<button class="side-btn" data-page="settings" onclick="showPage('settings')">⚙ &nbsp; Settings</button>
+<div class="side-bottom"><button class="side-btn" onclick="logout()">↩ &nbsp; Exit dashboard</button></div>
+</aside>
+
+<main class="main">
+<div class="topbar"><h2 id="pageTitle">Overview</h2><div class="business-pill" id="businessPill">My Business</div></div>
+
+<section class="page active" id="page-overview">
+<div class="stats">
+<div class="card stat"><small>Conversations</small><div class="num" id="statChats">0</div></div>
+<div class="card stat"><small>Bookings</small><div class="num" id="statBookings">0</div></div>
+<div class="card stat"><small>New customers</small><div class="num" id="statCustomers">0</div></div>
+<div class="card stat"><small>Needs you</small><div class="num" id="statNeeds">0</div></div>
+</div>
+<div class="dashboard-grid">
+<div class="card panel"><h3>Recent conversations</h3><div id="recentChats"></div></div>
+<div class="card panel"><h3>Upcoming bookings</h3><div id="upcomingBookings"></div></div>
+</div>
+</section>
+
+<section class="page" id="page-chats">
+<div class="card panel"><h3>Customer conversations</h3><div id="chatList"></div></div>
+</section>
+
+<section class="page" id="page-bookings">
+<div class="card panel"><h3>Bookings</h3><div class="table-wrap"><table class="table"><thead><tr><th>Customer</th><th>Service</th><th>Date</th><th>Status</th><th>Action</th></tr></thead><tbody id="bookingTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-customers">
+<div class="card panel"><h3>Customers & leads</h3><div class="table-wrap"><table class="table"><thead><tr><th>Name</th><th>Contact</th><th>Need</th><th>Status</th></tr></thead><tbody id="customerTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-settings">
+<div class="card panel">
+<h3>Business information</h3>
+<div class="form-grid">
+<div class="field"><label>Business name</label><input id="setName"></div><div class="field"><label>Business type</label><input id="setType"></div>
+</div>
+<div class="field"><label>Location</label><input id="setLocation"></div>
+<div class="field"><label>Description</label><textarea id="setDescription"></textarea></div>
+<button class="btn primary" onclick="saveBusinessSettings()">Save changes</button>
+<hr style="border:0;border-top:1px solid var(--line);margin:25px 0">
+<h3>Services & prices</h3><div id="settingsServices"></div>
+<div class="service-add"><input id="setServiceName" placeholder="Service"><input id="setServicePrice" placeholder="Price"><button class="btn primary" onclick="addServiceFromSettings()">Add</button></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:25px 0">
+<h3>FAQs</h3><div id="settingsFaqs"></div>
+<div class="field"><input id="setFaqQ" placeholder="Question"></div><div class="field"><textarea id="setFaqA" placeholder="Answer"></textarea></div><button class="btn primary" onclick="addFaqFromSettings()">Add FAQ</button>
+<hr style="border:0;border-top:1px solid var(--line);margin:25px 0">
+<h3>AI receptionist</h3>
+<div class="row"><div><b>Receptionist status</b><small>Use your saved business information when replying.</small></div><button class="btn small" id="aiToggle" onclick="toggleAI()">ON</button></div>
+<div class="field" style="margin-top:14px"><label>AI personality</label><select id="setStyle"><option>Friendly and professional</option><option>Warm and casual</option><option>Short and direct</option></select></div>
+<button class="btn primary" onclick="saveAISettings()">Save AI settings</button>
+</div>
+</section>
+</main>
+
+<nav class="mobile-nav">
+<button data-page="overview" class="active" onclick="showPage('overview')">⌂<span>Home</span></button>
+<button data-page="chats" onclick="showPage('chats')">◉<span>Chats</span></button>
+<button data-page="bookings" onclick="showPage('bookings')">▣<span>Bookings</span></button>
+<button data-page="customers" onclick="showPage('customers')">♙<span>Customers</span></button>
+<button onclick="toggleMore()">☰<span>More</span></button>
+</nav>
+<div id="moreMenu" class="modal" onclick="if(event.target===this)toggleMore()">
+<div class="modalbox" style="max-width:330px"><div class="modalhead"><b>More</b><button class="x" onclick="toggleMore()">✕</button></div>
+<button class="side-btn" onclick="toggleMore();showPage('settings')">⚙ &nbsp; Settings</button>
+<button class="side-btn" onclick="toggleMore();logout()">↩ &nbsp; Exit dashboard</button>
+</div></div>
+</div>
+
+<div id="loginModal" class="modal">
+<div class="modalbox" style="max-width:430px">
+<div class="modalhead"><h3 style="margin:0">Log in</h3><button class="x" onclick="closeLogin()">✕</button></div>
+<p style="color:var(--muted)">This prototype stores your business on this device. Enter any details to continue.</p>
+<div class="field"><label>Email</label><input id="loginEmail" type="email" placeholder="you@example.com"></div>
+<div class="field"><label>Password</label><input id="loginPassword" type="password" placeholder="••••••••"></div>
+<button class="btn primary" style="width:100%" onclick="login()">Log in</button>
+</div></div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script>
+const KEY='voicedesk_business_v3', DATA='voicedesk_data_v3';
+let business=JSON.parse(localStorage.getItem(KEY)||'null');
+let data=JSON.parse(localStorage.getItem(DATA)||'null')||{chats:[],bookings:[],customers:[],aiOn:true};
+let services=[],faqs=[],onStep=1;
+
+const days=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+function initHours(){
+const el=document.getElementById('hoursFields'); if(!el)return;
+el.innerHTML=days.map((d,i)=>`<div class="row"><b>${d}</b><div style="display:flex;gap:7px;align-items:center"><input id="open${i}" type="time" value="${i<6?'09:00':''}" style="padding:7px;border:1px solid var(--line);border-radius:7px"><span>to</span><input id="close${i}" type="time" value="${i<6?'18:00':''}" style="padding:7px;border:1px solid var(--line);border-radius:7px"><label style="font-size:12px"><input id="closed${i}" type="checkbox" ${i===6?'checked':''} onchange="toggleDay(${i})"> Closed</label></div></div>`).join('');
+}
+function toggleDay(i){const c=document.getElementById('closed'+i);document.getElementById('open'+i).disabled=c.checked;document.getElementById('close'+i).disabled=c.checked}
+function startOnboarding(){document.getElementById('publicSite').style.display='none';document.getElementById('app').classList.remove('active');document.getElementById('onboarding').classList.add('active');initHours();renderServiceList();renderFaqList();showOnboardStep(1)}
+function showPublic(){document.getElementById('publicSite').style.display='block';document.getElementById('onboarding').classList.remove('active');document.getElementById('app').classList.remove('active');window.scrollTo(0,0)}
+function nextOnboard(n){if(n===2&&!document.getElementById('bizName').value.trim()){toast('Please enter your business name.');return} if(n===3)saveHours();showOnboardStep(n)}
+function showOnboardStep(n){onStep=n;document.querySelectorAll('.onboard-step').forEach((x,i)=>x.classList.toggle('active',i===n-1));document.querySelectorAll('.step-dot').forEach((x,i)=>x.classList.toggle('active',i<n))}
+function saveHours(){business=business||{};business.hours=days.map((d,i)=>({day:d,closed:document.getElementById('closed'+i).checked,open:document.getElementById('open'+i).value,close:document.getElementById('close'+i).value}))}
+function addService(){const n=document.getElementById('serviceName').value.trim(),p=document.getElementById('servicePrice').value.trim();if(!n){toast('Enter a service name.');return}services.push({name:n,price:p||'Contact us'});document.getElementById('serviceName').value='';document.getElementById('servicePrice').value='';renderServiceList()}
+function renderServiceList(){const el=document.getElementById('serviceList');if(!el)return;el.innerHTML=services.length?services.map((s,i)=>`<div class="service-item"><span><b>${escapeHtml(s.name)}</b> — ${escapeHtml(s.price)}</span><button class="remove" onclick="services.splice(${i},1);renderServiceList()">Remove</button></div>`).join(''):'<p style="color:var(--muted);font-size:13px">No services added yet. You can add them later in Settings.</p>'}
+function addFaq(){const q=document.getElementById('faqQ').value.trim(),a=document.getElementById('faqA').value.trim();if(!q||!a){toast('Add both the question and answer.');return}faqs.push({q,a});document.getElementById('faqQ').value='';document.getElementById('faqA').value='';renderFaqList()}
+function renderFaqList(){const el=document.getElementById('faqList');if(!el)return;el.innerHTML=faqs.map((f,i)=>`<div class="list-editor"><b>${escapeHtml(f.q)}</b><div style="color:var(--muted);font-size:13px;margin:5px 0">${escapeHtml(f.a)}</div><button class="remove" onclick="faqs.splice(${i},1);renderFaqList()">Remove</button></div>`).join('')}
+function activateBusiness(){
+const name=document.getElementById('bizName').value.trim();if(!name){toast('Please enter your business name.');showOnboardStep(1);return}
+saveHours();
+business={name,type:document.getElementById('bizType').value,location:document.getElementById('bizLocation').value.trim()||'Not provided',description:document.getElementById('bizDescription').value.trim()||'A local business',hours:business?.hours||[],services:[...services],faqs:[...faqs],style:document.getElementById('aiStyle').value};
+data={chats:[],bookings:[],customers:[],aiOn:true};
+localStorage.setItem(KEY,JSON.stringify(business));localStorage.setItem(DATA,JSON.stringify(data));openDashboard()
+}
+function openDashboard(){document.getElementById('publicSite').style.display='none';document.getElementById('onboarding').classList.remove('active');document.getElementById('app').classList.add('active');refreshDashboard();showPage('overview')}
+function login(){if(!business){toast('No business profile found. Set up your business first.');closeLogin();startOnboarding();return}closeLogin();openDashboard()}
+function openLogin(){document.getElementById('loginModal').classList.add('show')}
+function closeLogin(){document.getElementById('loginModal').classList.remove('show')}
+function logout(){document.getElementById('app').classList.remove('active');showPublic();toast('Dashboard closed. Your business data is still saved on this device.')}
+function showPage(page){
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));const el=document.getElementById('page-'+page);if(el)el.classList.add('active');
+document.querySelectorAll('.side-btn[data-page],.mobile-nav button[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+const titles={overview:'Overview',chats:'Chats',bookings:'Bookings',customers:'Customers',settings:'Settings'};document.getElementById('pageTitle').textContent=titles[page]||'Overview';refreshDashboard()
+}
+function toggleMore(){document.getElementById('moreMenu').classList.toggle('show')}
+function refreshDashboard(){
+if(!business)return;document.getElementById('businessPill').textContent=business.name;
+document.getElementById('statChats').textContent=data.chats.length;document.getElementById('statBookings').textContent=data.bookings.length;document.getElementById('statCustomers').textContent=data.customers.length;document.getElementById('statNeeds').textContent=data.chats.filter(c=>c.status==='Needs owner').length;
+document.getElementById('recentChats').innerHTML=data.chats.length?data.chats.slice(-5).reverse().map(c=>`<div class="row"><div><b>${escapeHtml(c.name||'New customer')}</b><small>${escapeHtml(c.last||'Conversation')}</small></div><span class="tag ${c.status==='Needs owner'?'orange':''}">${escapeHtml(c.status||'AI answered')}</span></div>`).join(''):'<div class="empty">No conversations yet. Customer chats will appear here.</div>';
+document.getElementById('upcomingBookings').innerHTML=data.bookings.length?data.bookings.slice(-5).reverse().map(b=>`<div class="row"><div><b>${escapeHtml(b.customer)}</b><small>${escapeHtml(b.service)} · ${escapeHtml(b.date)}</small></div><span class="tag">${escapeHtml(b.status)}</span></div>`).join(''):'<div class="empty">No bookings yet.</div>';
+document.getElementById('chatList').innerHTML=data.chats.length?data.chats.slice().reverse().map((c,i)=>`<div class="row"><div><b>${escapeHtml(c.name)}</b><small>${escapeHtml(c.last)}</small></div><div><span class="tag ${c.status==='Needs owner'?'orange':''}">${escapeHtml(c.status)}</span> <button class="btn small" onclick="takeOver(${data.chats.length-1-i})">Take over</button></div></div>`).join(''):'<div class="empty">No customer conversations yet.</div>';
+document.getElementById('bookingTable').innerHTML=data.bookings.length?data.bookings.map((b,i)=>`<tr><td>${escapeHtml(b.customer)}</td><td>${escapeHtml(b.service)}</td><td>${escapeHtml(b.date)}</td><td><span class="tag">${escapeHtml(b.status)}</span></td><td><button class="btn small" onclick="completeBooking(${i})">Complete</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty">No bookings yet.</td></tr>';
+document.getElementById('customerTable').innerHTML=data.customers.length?data.customers.map(c=>`<tr><td>${escapeHtml(c.name)}</td><td>${escapeHtml(c.contact||'Not provided')}</td><td>${escapeHtml(c.need||'General enquiry')}</td><td><span class="tag">${escapeHtml(c.status||'New lead')}</span></td></tr>`).join(''):'<tr><td colspan="4" class="empty">No customers yet.</td></tr>';
+document.getElementById('setName').value=business.name||'';document.getElementById('setType').value=business.type||'';document.getElementById('setLocation').value=business.location||'';document.getElementById('setDescription').value=business.description||'';document.getElementById('setStyle').value=business.style||'Friendly and professional';document.getElementById('aiToggle').textContent=data.aiOn?'ON':'OFF';document.getElementById('aiToggle').className='btn small '+(data.aiOn?'primary':'');
+document.getElementById('settingsServices').innerHTML=(business.services||[]).map((s,i)=>`<div class="row"><span>${escapeHtml(s.name)} — <b>${escapeHtml(s.price)}</b></span><button class="remove" onclick="removeSettingService(${i})">Remove</button></div>`).join('')||'<div class="empty">No services.</div>';
+document.getElementById('settingsFaqs').innerHTML=(business.faqs||[]).map((f,i)=>`<div class="list-editor"><b>${escapeHtml(f.q)}</b><div style="color:var(--muted);font-size:13px">${escapeHtml(f.a)}</div><button class="remove" onclick="removeSettingFaq(${i})">Remove</button></div>`).join('')||'<div class="empty">No FAQs.</div>';
+}
+function saveData(){localStorage.setItem(KEY,JSON.stringify(business));localStorage.setItem(DATA,JSON.stringify(data))}
+function saveBusinessSettings(){business.name=document.getElementById('setName').value.trim()||business.name;business.type=document.getElementById('setType').value;business.location=document.getElementById('setLocation').value.trim();business.description=document.getElementById('setDescription').value.trim();saveData();refreshDashboard();toast('Business information saved.')}
+function addServiceFromSettings(){const n=document.getElementById('setServiceName').value.trim(),p=document.getElementById('setServicePrice').value.trim();if(!n)return toast('Enter a service.');business.services.push({name:n,price:p||'Contact us'});document.getElementById('setServiceName').value='';document.getElementById('setServicePrice').value='';saveData();refreshDashboard();toast('Service added.')}
+function removeSettingService(i){business.services.splice(i,1);saveData();refreshDashboard()}
+function addFaqFromSettings(){const q=document.getElementById('setFaqQ').value.trim(),a=document.getElementById('setFaqA').value.trim();if(!q||!a)return toast('Add both the question and answer.');business.faqs.push({q,a});document.getElementById('setFaqQ').value='';document.getElementById('setFaqA').value='';saveData();refreshDashboard();toast('FAQ added.')}
+function removeSettingFaq(i){business.faqs.splice(i,1);saveData();refreshDashboard()}
+function toggleAI(){data.aiOn=!data.aiOn;saveData();refreshDashboard();toast('AI receptionist '+(data.aiOn?'enabled':'disabled')+'.')}
+function saveAISettings(){business.style=document.getElementById('setStyle').value;saveData();toast('AI settings saved.')}
+function takeOver(i){data.chats[i].status='Owner handling';saveData();refreshDashboard();toast('You took over the conversation.')}
+function completeBooking(i){data.bookings[i].status='Completed';saveData();refreshDashboard();toast('Booking marked completed.')}
+function scrollToDemo(){document.getElementById('how').scrollIntoView({behavior:'smooth'})}
+function quickDemo(t){document.getElementById('demoInput').value=t;sendDemo()}
+function sendDemo(){const input=document.getElementById('demoInput'),text=input.value.trim();if(!text)return;addMsg(text,'user');input.value='';setTimeout(()=>addMsg(demoReply(text),'ai'),250)}
+function addMsg(t,type){const el=document.getElementById('demoMessages');el.insertAdjacentHTML('beforeend',`<div class="msg ${type}">${escapeHtml(t)}</div>`);el.scrollTop=el.scrollHeight}
+function demoReply(t){const x=t.toLowerCase();if(x.includes('price')||x.includes('braid')||x.includes('cost')||x.includes('how much'))return'Braiding starts from ₦8,000. If you tell me the style you want, I can help with the next step.';if(x.includes('open')||x.includes('close')||x.includes('time')||x.includes('hour'))return'We are open Monday to Saturday, 9:00 AM to 6:00 PM.';if(x.includes('book')||x.includes('appointment'))return'Sure. I can help you start a booking. What service would you like and what day works for you?';if(x.includes('where')||x.includes('location'))return'We are located in Abak, Akwa Ibom. Ask for directions if you need help finding us.';if(x.includes('hello')||x.includes('hi'))return'Hi! Welcome to Glow Beauty Studio. How can I help you?';return'I’m not completely sure about that yet. I can capture your request and flag it for the business owner.'}
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.add('hidden'),2500)}
+initHours();
+if(business){/* saved profile remains available; user can log in */}
+
+/* Add a simple simulated customer chat from a demo request into saved dashboard data. */
+function addDemoLead(){
+ if(!business)return;
+ data.chats.push({name:'Demo Customer',last:'Asked about your business',status:'AI answered'});
+ data.customers.push({name:'Demo Customer',contact:'Not provided',need:'General enquiry',status:'New lead'});
+ saveData();refreshDashboard();
+}
+</script>
+</body>
+</html>
