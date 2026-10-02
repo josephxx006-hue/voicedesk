@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>VoiceDesk — Never miss a customer again</title>
+<style>
+:root{
+  --bg:#f6f7fb;--card:#fff;--text:#111827;--muted:#6b7280;
+  --line:#e5e7eb;--primary:#111827;--accent:#4f46e5;--green:#16a34a;
+  --danger:#dc2626;--shadow:0 12px 35px rgba(17,24,39,.08);--radius:20px
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.app{min-height:100vh}
+.topbar{height:68px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:20}
+.logo{font-size:21px;font-weight:800;letter-spacing:-.5px}.logo span{color:var(--accent)}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:40px;height:40px;border:1px solid var(--line);background:#fff;border-radius:12px}
+.avatar{width:38px;height:38px;border-radius:50%;background:#111827;color:#fff;display:grid;place-items:center;font-weight:700}
+.hero{padding:72px 20px 45px;max-width:1100px;margin:auto}
+.badge{display:inline-flex;gap:7px;align-items:center;background:#eef2ff;color:#4338ca;padding:8px 12px;border-radius:999px;font-size:13px;font-weight:700}
+.dot{width:7px;height:7px;background:#22c55e;border-radius:50%}
+.hero h1{font-size:clamp(42px,8vw,76px);line-height:.98;letter-spacing:-4px;max-width:850px;margin:20px 0}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:18px;line-height:1.65;color:var(--muted);max-width:650px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{padding:13px 18px;border-radius:13px;font-weight:700}
+.btn.primary{background:var(--primary);color:#fff}.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}
+.btn.accent{background:var(--accent);color:#fff}
+.demo-wrap{max-width:1100px;margin:10px auto 60px;padding:0 20px}
+.demo-card{background:#111827;border-radius:28px;padding:22px;color:#fff;box-shadow:var(--shadow);display:grid;grid-template-columns:1fr 1fr;gap:25px}
+.demo-info{padding:30px 10px}.demo-info h2{font-size:32px;margin:10px 0}.demo-info p{color:#cbd5e1;line-height:1.6}
+.status{display:inline-flex;align-items:center;gap:8px;color:#bbf7d0;font-size:13px;font-weight:700}
+.chat{background:#f8fafc;border-radius:22px;padding:16px;color:var(--text);min-height:420px;display:flex;flex-direction:column}
+.chat-head{display:flex;align-items:center;gap:10px;padding-bottom:13px;border-bottom:1px solid var(--line)}
+.bot{width:38px;height:38px;border-radius:12px;background:#111827;color:#fff;display:grid;place-items:center;font-weight:800}
+.chat-head small{display:block;color:var(--muted);margin-top:2px}
+.messages{flex:1;padding:14px 3px;overflow:auto;max-height:300px}
+.msg{max-width:82%;padding:11px 13px;border-radius:16px;margin:7px 0;font-size:14px;line-height:1.45}
+.msg.botmsg{background:#fff;border:1px solid var(--line);border-top-left-radius:5px}
+.msg.usermsg{background:#111827;color:#fff;margin-left:auto;border-top-right-radius:5px}
+.quick{display:flex;gap:7px;overflow:auto;padding:6px 0}.quick button{white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px}
+.chat-input{display:flex;gap:8px;margin-top:8px}.chat-input input{flex:1;border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}.chat-input button{background:var(--accent);color:#fff;border-radius:12px;padding:0 16px;font-weight:700}
+.features{max-width:1100px;margin:0 auto 70px;padding:0 20px}
+.section-title{margin-bottom:25px}.section-title h2{font-size:34px;letter-spacing:-1.5px}.section-title p{color:var(--muted);margin-top:7px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.feature{background:#fff;border:1px solid var(--line);padding:22px;border-radius:18px}
+.feature .ico{font-size:25px;margin-bottom:14px}.feature h3{margin-bottom:7px}.feature p{color:var(--muted);line-height:1.55;font-size:14px}
+.dashboard{display:none;max-width:1200px;margin:auto;padding:25px 20px 100px}
+.dashboard.active{display:block}.landing.hidden{display:none}
+.dash-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.dash-head h1{font-size:28px}.dash-head p{color:var(--muted);margin-top:4px}
+.toggle{display:flex;align-items:center;gap:9px;background:#ecfdf5;color:#166534;padding:9px 12px;border-radius:999px;font-size:13px;font-weight:700}
+.switch{width:38px;height:22px;border-radius:999px;background:#22c55e;position:relative}.switch:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;right:3px;top:3px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.stat{background:#fff;border:1px solid var(--line);padding:18px;border-radius:18px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:27px;margin-top:8px}
+.dash-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:15px;margin-top:15px}.panel{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.panel h3{margin-bottom:15px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #f0f0f0}.row:last-child{border-bottom:0}.customer{display:flex;align-items:center;gap:10px}.mini-avatar{width:35px;height:35px;border-radius:11px;background:#eef2ff;color:#4338ca;display:grid;place-items:center;font-weight:700}.muted{color:var(--muted);font-size:13px}.pill{padding:6px 9px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:11px;font-weight:700}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:none;justify-content:space-around;padding:8px 5px;z-index:30}.nav button{background:none;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px}.nav button.active{color:var(--accent);font-weight:700}
+.modal{display:none;position:fixed;inset:0;background:rgba(17,24,39,.55);z-index:50;align-items:center;justify-content:center;padding:20px}.modal.show{display:flex}.modal-box{background:#fff;border-radius:22px;padding:25px;max-width:430px;width:100%;box-shadow:var(--shadow)}.modal-box h2{margin-bottom:7px}.modal-box p{color:var(--muted);line-height:1.5;margin-bottom:18px}.form{display:grid;gap:12px}.form input,.form select{width:100%;padding:13px;border:1px solid var(--line);border-radius:12px;outline:none}.close{background:#f3f4f6;padding:10px 13px;border-radius:10px;margin-top:10px}
+footer{padding:35px 20px;border-top:1px solid var(--line);color:var(--muted);text-align:center;font-size:13px}
+@media(max-width:800px){
+ .demo-card{grid-template-columns:1fr}.demo-info{padding:10px}.grid{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}.dash-grid{grid-template-columns:1fr}
+ .hero{padding-top:50px}.hero h1{letter-spacing:-2.5px}
+}
+@media(max-width:520px){
+ .topbar{padding:0 14px}.hero{padding-left:16px;padding-right:16px}.demo-wrap,.features{padding:0 14px}
+ .hero p{font-size:16px}.hero-actions .btn{width:100%}.cards{gap:9px}.stat{padding:14px}.stat strong{font-size:23px}.dashboard{padding:18px 14px 85px}.nav{display:flex}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="logo">Voice<span>Desk</span></div>
+  <div class="top-actions">
+    <button class="icon-btn" onclick="openModal('login')">↪</button>
+    <button class="avatar" onclick="openModal('signup')">V</button>
+  </div>
+</header>
+
+<main id="landing" class="landing">
+<section class="hero">
+  <div class="badge"><span class="dot"></span> AI receptionist for modern businesses</div>
+  <h1>Never miss a <span>customer</span> again.</h1>
+  <p>VoiceDesk helps businesses answer customer questions, capture leads and manage bookings — even when the owner is busy.</p>
+  <div class="hero-actions">
+    <button class="btn primary" onclick="scrollToDemo()">Try the Demo</button>
+    <button class="btn secondary" onclick="openModal('signup')">Set Up My Business</button>
+  </div>
+</section>
+
+<section class="demo-wrap" id="demo">
+<div class="demo-card">
+  <div class="demo-info">
+    <div class="status"><span class="dot"></span> VoiceDesk is online</div>
+    <h2>Meet your AI receptionist.</h2>
+    <p>Test how a customer could interact with a business without calling the owner directly.</p>
+    <button class="btn accent" style="margin-top:22px" onclick="sendQuick('I want to book an appointment')">Test a booking</button>
+  </div>
+  <div class="chat">
+    <div class="chat-head">
+      <div class="bot">V</div>
+      <div><strong>Glow Beauty Studio</strong><small>VoiceDesk receptionist · Online</small></div>
+    </div>
+    <div class="messages" id="messages">
+      <div class="msg botmsg">Hi! 👋 Welcome to Glow Beauty Studio. How can I help you today?</div>
+    </div>
+    <div class="quick">
+      <button onclick="sendQuick('What are your prices?')">Prices</button>
+      <button onclick="sendQuick('What time are you open?')">Opening hours</button>
+      <button onclick="sendQuick('I want to book')">Book appointment</button>
+      <button onclick="sendQuick('Where are you located?')">Location</button>
+    </div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="Ask the receptionist..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="features">
+ <div class="section-title"><h2>Everything a small business needs.</h2><p>Start simple. Add more as your business grows.</p></div>
+ <div class="grid">
+  <div class="feature"><div class="ico">💬</div><h3>Answer customers</h3><p>Give instant answers about services, prices, opening hours and common questions.</p></div>
+  <div class="feature"><div class="ico">📅</div><h3>Capture bookings</h3><p>Turn conversations into appointments instead of losing customers who can't reach you.</p></div>
+  <div class="feature"><div class="ico">🔔</div><h3>Hand off when needed</h3><p>When VoiceDesk doesn't know something, the owner can take over instead of the AI guessing.</p></div>
+ </div>
+</section>
+</main>
+
+<section id="dashboard" class="dashboard">
+  <div class="dash-head">
+    <div><h1>Good afternoon 👋</h1><p>Here's what's happening with your business.</p></div>
+    <div class="toggle"><span class="switch"></span> AI receptionist ON</div>
+  </div>
+  <div class="cards">
+    <div class="stat"><small>Conversations</small><strong>24</strong></div>
+    <div class="stat"><small>Bookings</small><strong>8</strong></div>
+    <div class="stat"><small>New customers</small><strong>6</strong></div>
+    <div class="stat"><small>Needs you</small><strong>2</strong></div>
+  </div>
+  <div class="dash-grid">
+    <div class="panel">
+      <h3>Recent conversations</h3>
+      <div class="row"><div class="customer"><div class="mini-avatar">A</div><div><strong>Amaka</strong><div class="muted">I want to book braids...</div></div></div><span class="pill">Booked</span></div>
+      <div class="row"><div class="customer"><div class="mini-avatar">D</div><div><strong>Daniel</strong><div class="muted">How much is a haircut?</div></div></div><span class="pill">Answered</span></div>
+      <div class="row"><div class="customer"><div class="mini-avatar">M</div><div><strong>Mercy</strong><div class="muted">Can I come tomorrow?</div></div></div><span style="color:#b45309;font-size:11px;font-weight:700">Needs you</span></div>
+    </div>
+    <div class="panel">
+      <h3>Upcoming bookings</h3>
+      <div class="row"><div><strong>Amaka</strong><div class="muted">Today · 3:00 PM</div></div><span class="pill">Confirmed</span></div>
+      <div class="row"><div><strong>David</strong><div class="muted">Today · 5:30 PM</div></div><span class="pill">Confirmed</span></div>
+      <div class="row"><div><strong>Sarah</strong><div class="muted">Tomorrow · 11:00 AM</div></div><span class="pill">Confirmed</span></div>
+    </div>
+  </div>
+</section>
+
+<nav class="nav">
+ <button class="active" onclick="showDash()">⌂<span>Home</span></button>
+ <button onclick="alert('Chats module coming next.')">◉<span>Chats</span></button>
+ <button onclick="alert('Bookings module coming next.')">▣<span>Bookings</span></button>
+ <button onclick="alert('Settings module coming next.')">⚙<span>More</span></button>
+</nav>
+
+<footer>© 2026 VoiceDesk · Your AI receptionist</footer>
+
+<div class="modal" id="modal">
+ <div class="modal-box">
+   <h2 id="modalTitle">Create your business</h2>
+   <p id="modalText">Set up your VoiceDesk account. This is a prototype, so no real data is sent anywhere.</p>
+   <div class="form">
+     <input id="businessName" placeholder="Business name">
+     <input placeholder="Your name">
+     <input placeholder="Phone number">
+     <input placeholder="Email">
+     <select><option>Salon / Beauty</option><option>Barbershop</option><option>Restaurant</option><option>Other</option></select>
+     <button class="btn primary" onclick="enterDashboard()">Continue to dashboard</button>
+     <button class="close" onclick="closeModal()">Close</button>
+   </div>
+ </div>
+</div>
+</div>
+
+<script>
+const replies = [
+ {keys:['price','prices','cost','how much'],reply:'Our sample prices are: Braids ₦8,000, Cornrows ₦5,000 and Hair Treatment ₦4,000. Would you like to book one?'},
+ {keys:['open','opening','hours','time'],reply:'We are open Monday–Saturday, 9:00 AM–6:00 PM. What day would you like to visit?'},
+ {keys:['book','appointment','booking'],reply:'Sure! I can help with that. What service would you like to book, and what day works for you?'},
+ {keys:['location','located','address','where'],reply:'We are located in Abak, Akwa Ibom. For this demo, I can share the business address once the owner adds it to VoiceDesk.'},
+ {keys:['hello','hi','hey'],reply:'Hi! 👋 What can I help you with today?'},
+];
+function botReply(text){
+ const t=text.toLowerCase();
+ const found=replies.find(r=>r.keys.some(k=>t.includes(k)));
+ return found ? found.reply : "I can help with prices, opening hours, location or appointments. If you have a different question, I can pass it to the business owner.";
+}
+function addMessage(text,type){
+ const box=document.getElementById('messages');
+ const div=document.createElement('div');div.className='msg '+(type==='user'?'usermsg':'botmsg');div.textContent=text;
+ box.appendChild(div);box.scrollTop=box.scrollHeight;
+}
+function sendMessage(){
+ const input=document.getElementById('chatInput');const text=input.value.trim();if(!text)return;
+ addMessage(text,'user');input.value='';
+ setTimeout(()=>addMessage(botReply(text),'bot'),450);
+}
+function sendQuick(text){document.getElementById('chatInput').value=text;sendMessage()}
+function scrollToDemo(){document.getElementById('demo').scrollIntoView({behavior:'smooth'})}
+function openModal(type){
+ document.getElementById('modal').classList.add('show');
+ document.getElementById('modalTitle').textContent=type==='login'?'Welcome back':'Create your business';
+ document.getElementById('modalText').textContent=type==='login'?'Sign in to your VoiceDesk dashboard. This prototype does not store credentials.':'Set up your VoiceDesk account. This is a prototype, so no real data is sent anywhere.';
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+function enterDashboard(){
+ const name=document.getElementById('businessName').value.trim();
+ closeModal();document.getElementById('landing').classList.add('hidden');document.getElementById('dashboard').classList.add('active');
+ window.scrollTo({top:0,behavior:'smooth'});
+ if(name)document.querySelector('.dash-head h1').textContent='Welcome, '+name+' 👋';
+}
+function showDash(){
+ document.getElementById('landing').classList.add('hidden');document.getElementById('dashboard').classList.add('active');window.scrollTo(0,0)
+}
+</script>
+</body>
+</html>
